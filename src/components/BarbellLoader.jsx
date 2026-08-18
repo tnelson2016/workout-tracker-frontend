@@ -10,12 +10,12 @@ export default function BarbellLoader(props) {
     return (
         <svg viewBox=" 0 0 300 200">
 
-            /* this the bar */
+            {/* this the bar */}
             <rect x="40" y="96" width="180" height="8" fill="var(--chalk)" opacity={opacity}/>
             
           
           
-            /* the plates */
+            {/* the plates */}
             {platesToShow.map((height, index) => (
                 <rect
                     key={index}
@@ -27,6 +27,19 @@ export default function BarbellLoader(props) {
                     opacity={opacity}
                 />
 
+            ))}
+
+             {/* the plates - right side (mirrored) */}
+            {platesToShow.map((height, index) => (
+                <rect
+                    key={`right-${index}`}
+                    x={220 - 10 - index * 12}
+                    y={100 - height / 2}
+                    width={10}
+                    height={height}
+                    fill={index === 0 ? 'var(--load)' : 'var(--steel)'}
+                    opacity={opacity}
+                />
             ))}
     
         </svg>

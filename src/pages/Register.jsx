@@ -4,37 +4,45 @@ import BarbellLoader from '../components/BarbellLoader';
 import axios from 'axios';
 import './Login.css';
 
-export default function Login() {
+
+export default function Register() {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', {
+            const response = await axios.post('http://localhost:8080/api/auth/register', {
                 username: username,
+                email: email,
                 password: password,
             });
 
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', username)
+            localStorage.setItem('username', username);
+
             navigate('/dashboard');
-        } catch (error) {
-            setError('Username or password is wrong. Try again');
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.error) {
+                setError(err.response.data.error);
+            } else {
+                setError('Registration failed. Try again.');
+            }
         }
     };
 
-    return (
+       return (
         <div className="login-page">
-            <div className="login-header">
-                <h1>Workout Tracker</h1>
+               <div className="login-header">
+                <h1>Create Account</h1>
                 <BarbellLoader count={4} dim={true} />
             </div>
 
-            <form onSubmit={handleLogin} className="login-form">
+            <form onSubmit={handleRegister} className="login-form">
                 <div>
                     <label htmlFor="username">Username</label>
                     <input
@@ -42,6 +50,16 @@ export default function Login() {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
 
@@ -57,13 +75,15 @@ export default function Login() {
 
                 {error && <p className="login-error">{error}</p>}
 
-                <button type="submit">Log in</button>
+                <button type="submit">Sign Up</button>
             </form>
 
             <p style={{ textAlign: 'center', marginTop: '16px' }}>
-    Don't have an account? <Link to="/register">Sign up</Link>
-</p>
-
+                Already have an account? <Link to="/login">Log in</Link>
+            </p>
         </div>
     );
 }
+            
+
+
