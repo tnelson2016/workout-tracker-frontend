@@ -44,6 +44,21 @@ export default function Dashboard() {
             console.log('Failed to create workout', error);
         }
     };
+  
+  const handleDeleteWorkout = async(id) => {
+    const token = localStorage.getItem('token');
+
+    try {
+      await axios.delete(
+        `http://localhost:8080/api/workouts/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      setWorkouts(workouts.filter((workout) => workout.id !== id));
+    } catch (error) {
+      console.log('Failed to delete workout', error);
+    }
+  };
     
 
   return (
@@ -70,7 +85,14 @@ export default function Dashboard() {
       <ul className="dash-log-list">
         {workouts.map((workout) => (
           <li key={workout.id} className="dash-log-item">
-            {workout.name}
+            <span>{workout.name}</span>
+             <button
+                className="dash-delete-btn"
+                onClick={() => handleDeleteWorkout(workout.id)}
+                aria-label="Delete workout"
+            >
+                ×
+            </button>
           </li>
         ))}
       </ul>
